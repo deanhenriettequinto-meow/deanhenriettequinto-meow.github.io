@@ -1,0 +1,184 @@
+/* STREAMING_CHUNK: Defining CSS variables and root design tokens... */
+:root {
+--bg-dark: #080312;
+--card-bg: rgba(24, 12, 42, 0.65);
+--purple-accent: #a855f7;
+--lavender-glow: #c084fc;
+--deep-plum: #3b0764;
+--sparkle-gold: #fbbf24;
+--border-purple: rgba(192, 132, 252, 0.25);
+--border-hover: rgba(192, 132, 252, 0.6);
+--shadow-neon: 0 0 25px rgba(168, 85, 247, 0.4);
+--shadow-strong: 0 0 35px rgba(192, 132, 252, 0.7);
+--glass-blur: blur(18px);
+}
+
+/* STREAMING_CHUNK: General layout and smooth scrolling setup... */
+html {
+scroll-behavior: smooth;
+}
+
+body {
+background-color: var(--bg-dark);
+color: #f3e8ff;
+font-family: 'Inter', system-ui, -apple-system, sans-serif;
+margin: 0;
+padding: 0;
+overflow-x: hidden;
+min-height: 100vh;
+}
+
+/* STREAMING_CHUNK: Radial gradient ambient mesh background... */
+.bg-mesh {
+background-image:
+radial-gradient(at 10% 20%, rgba(88, 28, 135, 0.35) 0px, transparent 50%),
+radial-gradient(at 90% 80%, rgba(168, 85, 247, 0.28) 0px, transparent 50%),
+radial-gradient(at 50% 50%, rgba(76, 29, 149, 0.22) 0px, transparent 50%);
+background-attachment: fixed;
+}
+
+/* STREAMING_CHUNK: Glassmorphism panel and hover effects... */
+.glass-panel {
+background: var(--card-bg);
+backdrop-filter: var(--glass-blur);
+-webkit-backdrop-filter: var(--glass-blur);
+border: 1px solid var(--border-purple);
+border-radius: 1rem;
+}
+
+.glass-panel-hover {
+transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+border-color: var(--border-hover);
+box-shadow: var(--shadow-neon);
+transform: translateY(-4px);
+}
+
+/* STREAMING_CHUNK: Glowing typography and gradients... */
+.text-gradient {
+background: linear-gradient(135deg, var(--lavender-glow), #e879f9, #f472b6);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+
+.logo-glow {
+text-shadow: 0 0 15px rgba(192, 132, 252, 0.8);
+}
+
+/* STREAMING_CHUNK: Custom sparkly scrollbar styling... */
+::-webkit-scrollbar {
+width: 8px;
+}
+
+::-webkit-scrollbar-track {
+background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+background: #581c87;
+border-radius: 4px;
+border: 1px solid var(--border-purple);
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: var(--purple-accent);
+box-shadow: 0 0 10px var(--lavender-glow);
+}
+
+/* STREAMING_CHUNK: Custom buttons and interactive elements... */
+.btn-primary {
+background: linear-gradient(135deg, #9333ea, #4f46e5);
+color: #ffffff;
+font-weight: 700;
+padding: 0.75rem 1.75rem;
+border-radius: 0.75rem;
+border: none;
+cursor: pointer;
+box-shadow: var(--shadow-neon);
+transition: all 0.25s ease;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 0.5rem;
+}
+
+.btn-primary:hover {
+background: linear-gradient(135deg, #a855f7, #6366f1);
+transform: scale(1.04);
+box-shadow: var(--shadow-strong);
+}
+
+.btn-secondary {
+background: rgba(24, 12, 42, 0.7);
+color: var(--lavender-glow);
+font-weight: 600;
+padding: 0.75rem 1.5rem;
+border-radius: 0.75rem;
+border: 1px solid var(--border-purple);
+cursor: pointer;
+transition: all 0.25s ease;
+}
+
+.btn-secondary:hover {
+border-color: var(--lavender-glow);
+background: rgba(88, 28, 135, 0.4);
+color: #ffffff;
+}
+
+/* STREAMING_CHUNK: Form inputs and custom focus styling... */
+.form-input, .form-select, .form-textarea {
+width: 100%;
+padding: 0.75rem 1rem;
+background: rgba(15, 7, 30, 0.6);
+border: 1px solid var(--border-purple);
+border-radius: 0.75rem;
+color: #ffffff;
+font-size: 0.875rem;
+outline: none;
+transition: all 0.25s ease;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+border-color: var(--lavender-glow);
+box-shadow: 0 0 15px rgba(192, 132, 252, 0.3);
+}
+
+/* STREAMING_CHUNK: Tic-Tac-Toe Game grid & card styling... */
+.game-grid {
+display: grid;
+grid-template-columns: repeat(3, minmax(0, 1fr));
+gap: 0.75rem;
+}
+
+.cell {
+height: 6rem;
+background: rgba(24, 12, 42, 0.6);
+border: 1px solid var(--border-purple);
+border-radius: 1rem;
+font-size: 2.25rem;
+font-weight: 800;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: all 0.2s ease;
+}
+
+.cell:hover {
+background: rgba(88, 28, 135, 0.4);
+border-color: var(--lavender-glow);
+transform: scale(1.02);
+}
+
+/* STREAMING_CHUNK: Full-screen sparkle overlay canvas... */
+#sparkle-canvas {
+position: fixed;
+top: 0;
+left: 0;
+width: 100vw;
+height: 100vh;
+pointer-events: none;
+z-index: 9999;
+}

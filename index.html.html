@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dean's Portfolio</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#080312',
+                        cardBg: 'rgba(24, 12, 42, 0.65)',
+                        purpleAccent: '#a855f7',
+                        lavenderGlow: '#c084fc',
+                        deepPlum: '#3b0764',
+                        sparkleGold: '#fbbf24'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace']
+                    },
+                    boxShadow: {
+                        'neon': '0 0 25px rgba(168, 85, 247, 0.4)',
+                        'neon-strong': '0 0 35px rgba(192, 132, 252, 0.7)',
+                        'glass': '0 8px 32px 0 rgba(12, 3, 25, 0.45)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #080312;
+            color: #f3e8ff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Custom Glassmorphism */
+        .glass-panel {
+            background: rgba(24, 12, 42, 0.6);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(192, 132, 252, 0.2);
+        }
+
+        .glass-panel-hover:hover {
+            border-color: rgba(192, 132, 252, 0.6);
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.45);
+            transform: translateY(-4px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Canvas Particle Sparkle Overlay */
+        #sparkle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080312;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #581c87;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a855f7;
+        }
+
+        .bg-mesh {
+            background-image: 
+                radial-gradient(at 10% 20%, rgba(88, 28, 135, 0.35) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, rgba(168, 85, 247, 0.28) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(76, 29, 149, 0.22) 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-mesh min-h-screen relative selection:bg-purple-600 selection:text-white">
+
+    <!-- Full-Screen Interactive Sparkle Canvas -->
+    <canvas id="sparkle-canvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-purple-900/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo -->
+            <a href="#home" class="text-2xl font-extrabold tracking-wider bg-gradient-to-r from-lavenderGlow via-purple-300 to-pink-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(192,132,252,0.8)] flex items-center gap-1.5">
+                Dean&lt;3
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-lavenderGlow animate-ping"></span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-1 lg:space-x-6 text-sm font-medium">
+                <a href="#home" class="px-3 py-2 rounded-full transition-colors hover:text-lavenderGlow hover:bg-purple-900/30">Home</a>
+                <a href="#about" class="px-3 py-2 rounded-full transition-colors hover:text-lavenderGlow hover:bg-purple-900/30">About Me</a>
+                <a href="#skills" class="px-3 py-2 rounded-full transition-colors hover:text-lavenderGlow hover:bg-purple-900/30">Skills</a>
+                <a href="#projects" class="px-3 py-2 rounded-full transition-colors hover:text-lavenderGlow hover:bg-purple-900/30">Projects</a>
+                <a href="#game" class="px-3 py-2 rounded-full transition-colors text-lavenderGlow hover:bg-purple-900/30 flex items-center gap-1.5"><i class="fa-solid fa-gamepad"></i> Mini-Game</a>
+                <a href="#contact" class="px-3 py-2 rounded-full transition-colors hover:text-lavenderGlow hover:bg-purple-900/30">Contact</a>
+            </nav>
+
+            <!-- Action Button -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#contact" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white font-semibold shadow-neon transition-all transform hover:scale-105 active:scale-95 text-sm flex items-center gap-2">
+                    <i class="fa-solid fa-paper-plane text-xs"></i> Let's Connect
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" class="md:hidden text-lavenderGlow text-2xl p-2 focus:outline-none">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-purple-900/40 px-4 pt-2 pb-6 space-y-2">
+            <a href="#home" class="block px-4 py-2.5 rounded-lg hover:bg-purple-900/40 text-lavenderGlow">Home</a>
+            <a href="#about" class="block px-4 py-2.5 rounded-lg hover:bg-purple-900/40 text-lavenderGlow">About Me</a>
+            <a href="#skills" class="block px-4 py-2.5 rounded-lg hover:bg-purple-900/40 text-lavenderGlow">Skills</a>
+            <a href="#projects" class="block px-4 py-2.5 rounded-lg hover:bg-purple-900/40 text-lavenderGlow">Projects</a>
+            <a href="#game" class="block px-4 py-2.5 rounded-lg hover:bg-purple-900/40 text-lavenderGlow flex items-center gap-2"><i class="fa-solid fa-gamepad"></i> Tic-Tac-Toe Game</a>
+            <a href="#contact" class="block px-4 py-2.5 rounded-lg hover:bg-purple-900/40 text-lavenderGlow">Contact</a>
+        </div>
+    </header>
+
+    <!-- Hero / Profile Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-28 pb-16 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-purple-500/30 text-xs font-mono text-lavenderGlow shadow-neon">
+                    <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Hii, Welcome to my World of Immagination & Creativity!(AKA Portfolio lol)
+                </div>
+                
+                <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-tight">
+                    Hi, I'm <span class="bg-gradient-to-r from-lavenderGlow via-purple-300 to-pink-400 bg-clip-text text-transparent">Dean Henriette</span>
+                </h1>
+                
+                <p class="text-xl sm:text-2xl font-medium text-purple-200">
+                    IT Student, <span class="text-lavenderGlow">C Programmer</span>, Graphic Designer &amp; Digital Artist
+                </p>
+                
+                <p class="text-gray-300 max-w-2xl mx-auto lg:mx-0 text-base sm:text-lg leading-relaxed">
+                    Connecting efficient C programming logic with graphic design and digital art. Move your cursor to release glowing sparkles<3!
+                </p>
+
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#projects" class="px-8 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold shadow-neon transition-all transform hover:scale-105">
+                        View My Work <i class="fa-solid fa-arrow-right ml-2"></i>
+                    </a>
+                    <a href="#contact" class="px-8 py-3.5 rounded-xl glass-panel glass-panel-hover text-lavenderGlow font-bold border border-purple-500/40 transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-phone"></i> Get Contact Details
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-3 gap-4 pt-8 border-t border-purple-900/40 max-w-lg mx-auto lg:mx-0">
+                    <div class="glass-panel p-4 rounded-xl text-center">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-lavenderGlow">2+</div>
+                        <div class="text-xs text-gray-400 mt-1">Months C &amp; Dev</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-lavenderGlow">5+ YRS</div>
+                        <div class="text-xs text-gray-400 mt-1">Designs &amp; Art</div>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl text-center">
+                        <div class="text-2xl sm:text-3xl font-extrabold text-lavenderGlow">100%</div>
+                        <div class="text-xs text-gray-400 mt-1">Dedication</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-72 h-72 sm:w-96 sm:h-96">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-purple-600 to-pink-500 rounded-3xl blur-3xl opacity-35 animate-pulse"></div>
+                    <div class="relative w-full h-full glass-panel rounded-3xl p-6 flex flex-col items-center justify-center border border-purple-500/30 shadow-neon">
+                        <div class="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl bg-gradient-to-br from-purple-800 to-indigo-900 p-1 mb-6 shadow-neon-strong overflow-hidden relative group">
+                            <img src="images/profile.jpg/dean.jpg" alt="Dean Avatar" class="w-full h-full object-cover rounded-2xl group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-purple-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                <span class="text-xs font-bold text-white bg-black/70 px-3 py-1 rounded-full border border-purple-400/40">Dean Henriette T. Quinto</span>
+                            </div>
+                        </div>
+
+                        <h3 class="text-xl font-bold text-lavenderGlow">Dean Henriette T. Quinto</h3>
+                        <p class="text-xs font-mono text-purple-300 mt-1">  &lt;Programmer &amp; Visual Artist &gt;</p>
+                        
+                        <div class="flex items-center space-x-3 mt-4 text-purple-300">
+                            <a href="#contact" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:text-white hover:bg-purple-700/50 transition-colors" title="Contact Number"><i class="fa-solid fa-phone"></i></a>
+                            <a href="#contact" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:text-white hover:bg-purple-700/50 transition-colors" title="Email"><i class="fa-solid fa-envelope"></i></a>
+                            <a href="#contact" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center hover:text-white hover:bg-purple-700/50 transition-colors" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- About Me Section -->
+    <section id="about" class="py-24 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">About <span class="text-lavenderGlow">Me</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-purple-500 to-lavenderGlow mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-300 text-base sm:text-lg"> My Hobbies and Interests</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                <div class="lg:col-span-6 glass-panel p-8 rounded-3xl border border-purple-500/30 shadow-neon space-y-6">
+                    <h3 class="text-2xl font-bold text-lavenderGlow flex items-center gap-2">
+                        <i class="fa-solid fa-user text-purple-400"></i>Greetings! I'm Dean Henriette T. Quinto
+                    </h3>
+                    <p class="text-gray-300 leading-relaxed">
+                        I am an Information Technology student and <span class="text-lavenderGlow font-semibold">Graphic Designer</span>, Passionate about crafting aesthetic, web interfaces and eye-catching visual designs. Driven by continuous learning, creative problem-solving, and clean design aesthetics.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                        When I'm not coding or designing, you’ll usually find me immersed in web novels, manga, and manhwa, or exploring virtual worlds in Genshin Impact and Mobile Legends. When it’s time to truly unwind, nothing beats listening to relaxing lofi beats, enjoying a good cup of coffee, and catching up on well-deserved sleep.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 pt-2">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-location-dot text-lavenderGlow"></i>
+                            <span class="text-sm text-gray-200">Cagayan de Oro City</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-phone text-lavenderGlow"></i>
+                            <span class="text-sm text-gray-200">+63 965 798 7065</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-microchip text-lavenderGlow"></i>
+                            <span class="text-sm text-gray-200">C Language</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-palette text-lavenderGlow"></i>
+                            <span class="text-sm text-gray-200">Graphics &amp; Art</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="glass-panel p-6 rounded-2xl glass-panel-hover border border-purple-500/20">
+                        <div class="w-12 h-12 rounded-xl bg-purple-900/60 flex items-center justify-center text-lavenderGlow text-xl mb-4 shadow-neon">
+                            <i class="fa-solid fa-c"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">C Coding</h4>
+                        <p class="text-sm text-gray-400">Algorithms, pointers, memory allocation, structures, and CLI tools.</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl glass-panel-hover border border-purple-500/20">
+                        <div class="w-12 h-12 rounded-xl bg-purple-900/60 flex items-center justify-center text-lavenderGlow text-xl mb-4 shadow-neon">
+                            <i class="fa-solid fa-pen-nib"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Graphic Design</h4>
+                        <p class="text-sm text-gray-400">Logos, event pubmats, flyers, and branding assets.</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl glass-panel-hover border border-purple-500/20">
+                        <div class="w-12 h-12 rounded-xl bg-purple-900/60 flex items-center justify-center text-lavenderGlow text-xl mb-4 shadow-neon">
+                            <i class="fa-solid fa-paintbrush"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Digital Drawings</h4>
+                        <p class="text-sm text-gray-400">Character concepts, anime illustrations, and digital paintings.</p>
+                    </div>
+
+                    <div class="glass-panel p-6 rounded-2xl glass-panel-hover border border-purple-500/20">
+                        <div class="w-12 h-12 rounded-xl bg-purple-900/60 flex items-center justify-center text-lavenderGlow text-xl mb-4 shadow-neon">
+                            <i class="fa-solid fa-laptop-code"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-white mb-2">Web Design</h4>
+                        <p class="text-sm text-gray-400">Responsive web layouts, glassmorphism UI, and custom animations.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-24 px-4 sm:px-6 lg:px-8 relative bg-purple-950/20">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">My <span class="text-lavenderGlow">Skills</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-purple-500 to-lavenderGlow mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-300 text-base sm:text-lg">Core programming languages, visual tools, and design capabilities.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-panel p-6 rounded-2xl glass-panel-hover border border-purple-500/20">
+                    <div class="w-12 h-12 rounded-xl bg-purple-900/60 flex items-center justify-center text-lavenderGlow text-2xl mb-4 shadow-neon">
+                        <i class="fa-solid fa-c"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-white mb-1">C Language</h4>
+                    <p class="text-xs text-purple-300 font-mono mb-3">Pointers &amp; Data Structures</p>
+                    <div class="w-full bg-purple-950 rounded-full h-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-purple-500 to-lavenderGlow h-2 rounded-full" style="width: 90%"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl glass-panel-hover border border-purple-500/20">
+                    <div class="w-12 h-12 rounded-xl bg-purple-900/60 flex items-center justify-center text-lavenderGlow text-2xl mb-4 shadow-neon">
+                        <i class="fa-solid fa-pen-nib"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-white mb-1">Graphic Design</h4>
+                    <p class="text-xs text-purple-300 font-mono mb-3">Logos, Pubmats &amp; Identity</p>
+                    <div class="w-full bg-purple-950 rounded-full h-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-purple-500 to-lavenderGlow h-2 rounded-full" style="width: 92%"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl glass-panel-hover border border-purple-500/20">
+                    <div class="w-12 h-12 rounded-xl bg-purple-900/60 flex items-center justify-center text-lavenderGlow text-2xl mb-4 shadow-neon">
+                        <i class="fa-solid fa-paintbrush"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-white mb-1">Digital Drawing</h4>
+                    <p class="text-xs text-purple-300 font-mono mb-3">Anime &amp; Concept Illustration</p>
+                    <div class="w-full bg-purple-950 rounded-full h-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-purple-500 to-lavenderGlow h-2 rounded-full" style="width: 88%"></div>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-6 rounded-2xl glass-panel-hover border border-purple-500/20">
+                    <div class="w-12 h-12 rounded-xl bg-purple-900/60 flex items-center justify-center text-lavenderGlow text-2xl mb-4 shadow-neon">
+                        <i class="fa-brands fa-html5"></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-white mb-1">Web Front-End</h4>
+                    <p class="text-xs text-purple-300 font-mono mb-3">HTML5, CSS3, JS &amp; Tailwind</p>
+                    <div class="w-full bg-purple-950 rounded-full h-2 overflow-hidden">
+                        <div class="bg-gradient-to-r from-purple-500 to-lavenderGlow h-2 rounded-full" style="width: 85%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Featured <span class="text-lavenderGlow">Projects</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-purple-500 to-lavenderGlow mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-300 text-base sm:text-lg">Filter through Graphic Designs, C Coding, and Digital Drawings.</p>
+            </div>
+
+            <!-- Tab Filters -->
+            <div class="flex flex-wrap justify-center items-center gap-3 mb-12">
+                <button onclick="filterProjects('all')" class="tab-btn active px-6 py-2.5 rounded-full text-sm font-semibold transition-all border border-purple-500/40 glass-panel bg-purple-900/60 text-white shadow-neon" data-category="all">
+                    All Works
+                </button>
+                <button onclick="filterProjects('graphics')" class="tab-btn px-6 py-2.5 rounded-full text-sm font-semibold transition-all border border-purple-500/20 glass-panel text-purple-300 hover:text-white hover:bg-purple-900/40" data-category="graphics">
+                    <i class="fa-solid fa-pen-nib mr-1.5"></i> Graphic Designs
+                </button>
+                <button onclick="filterProjects('ccoding')" class="tab-btn px-6 py-2.5 rounded-full text-sm font-semibold transition-all border border-purple-500/20 glass-panel text-purple-300 hover:text-white hover:bg-purple-900/40" data-category="ccoding">
+                    <i class="fa-solid fa-c mr-1.5"></i> C Coding
+                </button>
+                <button onclick="filterProjects('drawings')" class="tab-btn px-6 py-2.5 rounded-full text-sm font-semibold transition-all border border-purple-500/20 glass-panel text-purple-300 hover:text-white hover:bg-purple-900/40" data-category="drawings">
+                    <i class="fa-solid fa-paintbrush mr-1.5"></i> Digital Drawings
+                </button>
+            </div>
+
+            <!-- Project Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+                
+                <!-- Graphic Design 1 -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden glass-panel-hover border border-purple-500/20 flex flex-col" data-category="graphics">
+                    <div class="h-48 bg-gradient-to-br from-purple-900 to-indigo-950 relative overflow-hidden group flex items-center justify-center">
+                        <i class="fa-solid fa-gem text-6xl text-lavenderGlow group-hover:scale-110 transition-transform duration-500"></i>
+                        <span class="absolute top-3 right-3 text-xs font-mono bg-purple-900/80 text-lavenderGlow px-3 py-1 rounded-full border border-purple-500/30">Graphic Design</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Vector Brand Identity &amp; Logo</h3>
+                            <p class="text-sm text-gray-300">A clean vector logo and brand identity system created with glowing purple neon branding standards.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Vector Art</span>
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Branding</span>
+                        </div>
+                        <button onclick="openModal('Vector Brand Identity & Logo', 'Designed a complete vector branding kit including responsive logos, typography guidelines, and social media banners.', 'Graphic Design')" class="w-full py-2.5 rounded-xl bg-purple-900/50 hover:bg-purple-800 text-lavenderGlow font-semibold text-sm border border-purple-500/30 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Graphic Design 2 -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden glass-panel-hover border border-purple-500/20 flex flex-col" data-category="graphics">
+                    <div class="h-48 bg-gradient-to-br from-purple-900 to-indigo-950 relative overflow-hidden group flex items-center justify-center">
+                        <i class="fa-solid fa-bullhorn text-6xl text-lavenderGlow group-hover:scale-110 transition-transform duration-500"></i>
+                        <span class="absolute top-3 right-3 text-xs font-mono bg-purple-900/80 text-lavenderGlow px-3 py-1 rounded-full border border-purple-500/30">Graphic Design</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Campaign Event Pubmat</h3>
+                            <p class="text-sm text-gray-300">High-resolution publication material designed for IT promotional events and school campaigns.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Pubmat</span>
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Poster</span>
+                        </div>
+                        <button onclick="openModal('Campaign Event Pubmat', 'Promotional event pubmat featuring modern typography, futuristic mesh gradients, and vibrant lighting.', 'Graphic Design')" class="w-full py-2.5 rounded-xl bg-purple-900/50 hover:bg-purple-800 text-lavenderGlow font-semibold text-sm border border-purple-500/30 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- C Coding 1 -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden glass-panel-hover border border-purple-500/20 flex flex-col" data-category="ccoding">
+                    <div class="h-48 bg-gradient-to-br from-purple-900 to-indigo-950 relative overflow-hidden group flex items-center justify-center">
+                        <i class="fa-solid fa-microchip text-6xl text-lavenderGlow group-hover:scale-110 transition-transform duration-500"></i>
+                        <span class="absolute top-3 right-3 text-xs font-mono bg-purple-900/80 text-lavenderGlow px-3 py-1 rounded-full border border-purple-500/30">C Coding</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Data Structures Engine in C</h3>
+                            <p class="text-sm text-gray-300">Memory-optimized algorithms for dynamic linked lists, trees, and stacks using C pointers.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Pointers</span>
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Memory</span>
+                        </div>
+                        <button onclick="openModal('Data Structures Engine in C', 'Custom memory allocation implementation (malloc/free) constructing fast linked lists and binary search trees.', 'C Coding')" class="w-full py-2.5 rounded-xl bg-purple-900/50 hover:bg-purple-800 text-lavenderGlow font-semibold text-sm border border-purple-500/30 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- C Coding 2 -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden glass-panel-hover border border-purple-500/20 flex flex-col" data-category="ccoding">
+                    <div class="h-48 bg-gradient-to-br from-purple-900 to-indigo-950 relative overflow-hidden group flex items-center justify-center">
+                        <i class="fa-solid fa-terminal text-6xl text-lavenderGlow group-hover:scale-110 transition-transform duration-500"></i>
+                        <span class="absolute top-3 right-3 text-xs font-mono bg-purple-900/80 text-lavenderGlow px-3 py-1 rounded-full border border-purple-500/30">C Coding</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">CLI Matrix Math Solver</h3>
+                            <p class="text-sm text-gray-300">C command-line tool solving matrix operations, determinants, and systems of linear equations.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">CLI Tool</span>
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Algorithms</span>
+                        </div>
+                        <button onclick="openModal('CLI Matrix Math Solver', 'Console software written in C utilizing multi-dimensional arrays, recursion, and file system export functions.', 'C Coding')" class="w-full py-2.5 rounded-xl bg-purple-900/50 hover:bg-purple-800 text-lavenderGlow font-semibold text-sm border border-purple-500/30 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Digital Drawing 1 -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden glass-panel-hover border border-purple-500/20 flex flex-col" data-category="drawings">
+                    <div class="h-48 bg-gradient-to-br from-purple-900 to-indigo-950 relative overflow-hidden group flex items-center justify-center">
+                        <i class="fa-solid fa-user-ninja text-6xl text-lavenderGlow group-hover:scale-110 transition-transform duration-500"></i>
+                        <span class="absolute top-3 right-3 text-xs font-mono bg-purple-900/80 text-lavenderGlow px-3 py-1 rounded-full border border-purple-500/30">Digital Drawing</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Anime Character Concept Art</h3>
+                            <p class="text-sm text-gray-300">Digital illustration featuring original character art, glowing magic particles, and line art.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Anime Art</span>
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Illustration</span>
+                        </div>
+                        <button onclick="openModal('Anime Character Concept Art', 'Detailed character drawing created digitally with custom brushes, violet ambient light, and specular highlights.', 'Digital Drawing')" class="w-full py-2.5 rounded-xl bg-purple-900/50 hover:bg-purple-800 text-lavenderGlow font-semibold text-sm border border-purple-500/30 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Digital Drawing 2 -->
+                <div class="project-card glass-panel rounded-2xl overflow-hidden glass-panel-hover border border-purple-500/20 flex flex-col" data-category="drawings">
+                    <div class="h-48 bg-gradient-to-br from-purple-900 to-indigo-950 relative overflow-hidden group flex items-center justify-center">
+                        <i class="fa-solid fa-wand-magic-sparkles text-6xl text-lavenderGlow group-hover:scale-110 transition-transform duration-500"></i>
+                        <span class="absolute top-3 right-3 text-xs font-mono bg-purple-900/80 text-lavenderGlow px-3 py-1 rounded-full border border-purple-500/30">Digital Drawing</span>
+                    </div>
+                    <div class="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-2">Lavender Atmospheric Portrait</h3>
+                            <p class="text-sm text-gray-300">Aesthetic digital painting focused on dramatic lavender rim lighting and soft shading depth.</p>
+                        </div>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Portrait</span>
+                            <span class="text-xs font-mono bg-purple-950 text-purple-300 px-2.5 py-1 rounded-md">Painting</span>
+                        </div>
+                        <button onclick="openModal('Lavender Atmospheric Portrait', 'Stylized portrait drawing exploring smooth color transitions, deep purple ambient occlusion, and glowing aura.', 'Digital Drawing')" class="w-full py-2.5 rounded-xl bg-purple-900/50 hover:bg-purple-800 text-lavenderGlow font-semibold text-sm border border-purple-500/30 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Tic-Tac-Toe Mini-Game Section -->
+    <section id="game" class="py-24 px-4 sm:px-6 lg:px-8 relative bg-purple-950/20">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Interactive <span class="text-lavenderGlow">Tic-Tac-Toe</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-purple-500 to-lavenderGlow mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-300 text-base sm:text-lg">Play against another player or test your skill against the AI Bot!</p>
+            </div>
+
+            <!-- Game Card -->
+            <div class="glass-panel p-8 rounded-3xl border border-purple-500/30 shadow-neon max-w-lg mx-auto">
+                <div class="flex justify-center gap-3 mb-6">
+                    <button id="btn-pvp" onclick="setGameMode('pvp')" class="px-4 py-1.5 rounded-full text-xs font-mono bg-purple-900/80 border border-purple-400 text-white shadow-neon">2 Player Mode</button>
+                    <button id="btn-ai" onclick="setGameMode('ai')" class="px-4 py-1.5 rounded-full text-xs font-mono glass-panel border border-purple-500/30 text-purple-300 hover:text-white">vs AI Bot</button>
+                </div>
+
+                <div class="flex justify-between items-center mb-6">
+                    <div class="text-sm font-semibold text-purple-200">
+                        Status: <span id="game-status" class="text-lavenderGlow font-mono">Player X's turn</span>
+                    </div>
+                    <div class="flex items-center space-x-4 text-xs font-mono">
+                        <span class="text-purple-300">X: <strong id="score-x" class="text-white">0</strong></span>
+                        <span class="text-purple-300">O: <strong id="score-o" class="text-white">0</strong></span>
+                        <span class="text-purple-300">Draws: <strong id="score-draw" class="text-white">0</strong></span>
+                    </div>
+                </div>
+
+                <!-- Grid -->
+                <div class="grid grid-cols-3 gap-3 mb-6">
+                    <button onclick="makeMove(0)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="0"></button>
+                    <button onclick="makeMove(1)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="1"></button>
+                    <button onclick="makeMove(2)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="2"></button>
+                    <button onclick="makeMove(3)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="3"></button>
+                    <button onclick="makeMove(4)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="4"></button>
+                    <button onclick="makeMove(5)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="5"></button>
+                    <button onclick="makeMove(6)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="6"></button>
+                    <button onclick="makeMove(7)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="7"></button>
+                    <button onclick="makeMove(8)" class="h-24 glass-panel rounded-2xl flex items-center justify-center text-4xl font-extrabold hover:bg-purple-800/40 transition-all shadow-inner border border-purple-500/20 cell" data-index="8"></button>
+                </div>
+
+                <div class="flex gap-4">
+                    <button onclick="resetGame()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold shadow-neon transition-all flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-rotate-right"></i> Restart Game
+                    </button>
+                    <button onclick="resetScores()" class="px-5 py-3 rounded-xl glass-panel text-gray-300 hover:text-white hover:bg-purple-800/40 font-semibold text-sm transition-all border border-purple-500/30">
+                        Reset Scores
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Info Section -->
+    <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Contact <span class="text-lavenderGlow">Info</span></h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-purple-500 to-lavenderGlow mx-auto rounded-full mb-4"></div>
+                <p class="text-gray-300 text-base sm:text-lg">Get in touch via mobile, email, or fill out the contact form below!</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="glass-panel p-8 rounded-3xl border border-purple-500/30 shadow-neon space-y-6">
+                        <h3 class="text-2xl font-bold text-lavenderGlow">Direct Contact Details</h3>
+                        <p class="text-gray-300 text-sm leading-relaxed">
+                            Have a commission in mind or need assistance in C programming or graphic pubmats? Reach out directly via call, text, or social media.
+                        </p>
+
+                        <div class="space-y-4 pt-2">
+                            <!-- Contact Number Display Card -->
+                            <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-purple-900/30 border border-purple-500/20 hover:border-purple-400/50 transition-colors">
+                                <div class="w-12 h-12 rounded-xl bg-purple-800/80 flex items-center justify-center text-lavenderGlow text-lg shadow-neon flex-shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <div class="text-xs text-purple-300 font-mono">Mobile / Phone No.</div>
+                                    <a href="tel:+639657987065" class="text-sm sm:text-base font-bold text-white hover:text-lavenderGlow transition-colors block">
+                                        +63 965 798 7065
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Alternate Telephone / Contact Card -->
+                            <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-purple-900/30 border border-purple-500/20 hover:border-purple-400/50 transition-colors">
+                                <div class="w-12 h-12 rounded-xl bg-purple-800/80 flex items-center justify-center text-lavenderGlow text-lg shadow-neon flex-shrink-0">
+                                    <i class="fa-solid fa-mobile-screen-button"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <div class="text-xs text-purple-300 font-mono">Secondary Mobile</div>
+                                    <a href="tel:+639123456789" class="text-sm sm:text-base font-bold text-white hover:text-lavenderGlow transition-colors block">
+                                        +63 912 345 6789
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Email Card -->
+                            <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-purple-900/30 border border-purple-500/20 hover:border-purple-400/50 transition-colors">
+                                <div class="w-12 h-12 rounded-xl bg-purple-800/80 flex items-center justify-center text-lavenderGlow text-lg shadow-neon flex-shrink-0">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div class="overflow-hidden">
+                                    <div class="text-xs text-purple-300 font-mono">Email Address</div>
+                                    <a href="mailto:deanhenriettequinto@gmail.com" class="text-sm font-bold text-white hover:text-lavenderGlow transition-colors block truncate">
+                                        deanhenriettequinto@gmail.com
+                                    </a>
+                                </div>
+                            </div>
+
+                            <!-- Location Card -->
+                            <div class="flex items-center gap-4 p-3.5 rounded-2xl bg-purple-900/30 border border-purple-500/20 hover:border-purple-400/50 transition-colors">
+                                <div class="w-12 h-12 rounded-xl bg-purple-800/80 flex items-center justify-center text-lavenderGlow text-lg shadow-neon flex-shrink-0">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-purple-300 font-mono">Location</div>
+                                    <div class="text-sm font-bold text-white">Lapasan, Cagayan de Oro City, Philippines</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-4 pt-4 border-t border-purple-900/40">
+                            <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-lavenderGlow hover:text-white hover:bg-purple-700/50 transition-colors" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-lavenderGlow hover:text-white hover:bg-purple-700/50 transition-colors" title="Discord"><i class="fa-brands fa-discord"></i></a>
+                            <a href="#" class="w-10 h-10 rounded-full glass-panel flex items-center justify-center text-lavenderGlow hover:text-white hover:bg-purple-700/50 transition-colors" title="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Contact Form with Phone Input -->
+                <div class="lg:col-span-7">
+                    <form id="contact-form" onsubmit="handleFormSubmit(event)" class="glass-panel p-8 rounded-3xl border border-purple-500/30 shadow-neon space-y-6">
+                        <h3 class="text-2xl font-bold text-lavenderGlow">Send a Message</h3>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-xs font-mono text-purple-200 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-user text-purple-400"></i> Full Name *
+                                </label>
+                                <input type="text" id="sender-name" required class="w-full px-4 py-3 rounded-xl glass-panel border border-purple-500/30 text-white focus:outline-none focus:border-lavenderGlow focus:ring-1 focus:ring-lavenderGlow transition-all text-sm" placeholder="Dean Henriette Quinto">
+                            </div>
+
+                            <div class="space-y-2">
+                                <label class="text-xs font-mono text-purple-200 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-phone text-purple-400"></i> Contact Number *
+                                </label>
+                                <input type="tel" id="sender-phone" required class="w-full px-4 py-3 rounded-xl glass-panel border border-purple-500/30 text-white focus:outline-none focus:border-lavenderGlow focus:ring-1 focus:ring-lavenderGlow transition-all text-sm" placeholder="+63 965 798 7065">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-mono text-purple-200 flex items-center gap-1.5">
+                                <i class="fa-solid fa-envelope text-purple-400"></i> Email Address *
+                            </label>
+                            <input type="email" id="sender-email" required class="w-full px-4 py-3 rounded-xl glass-panel border border-purple-500/30 text-white focus:outline-none focus:border-lavenderGlow focus:ring-1 focus:ring-lavenderGlow transition-all text-sm" placeholder="your@email.com">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-mono text-purple-200 flex items-center gap-1.5">
+                                <i class="fa-solid fa-layer-group text-purple-400"></i> Project Category *
+                            </label>
+                            <select id="sender-category" required class="w-full px-4 py-3 rounded-xl glass-panel border border-purple-500/30 text-white bg-purple-950/80 focus:outline-none focus:border-lavenderGlow focus:ring-1 focus:ring-lavenderGlow transition-all text-sm">
+                                <option value="" disabled selected>Select category...</option>
+                                <option value="Graphic Design" class="bg-purple-950">Graphic Design (Logo, Pubmats)</option>
+                                <option value="C Coding" class="bg-purple-950">C Programming &amp; Logic</option>
+                                <option value="Digital Drawing" class="bg-purple-950">Digital Drawing &amp; Illustration</option>
+                                <option value="Other Inquiry" class="bg-purple-950">General Inquiry</option>
+                            </select>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-mono text-purple-200 flex items-center gap-1.5">
+                                <i class="fa-solid fa-comment-dots text-purple-400"></i> Message *
+                            </label>
+                            <textarea id="sender-message" rows="4" required class="w-full px-4 py-3 rounded-xl glass-panel border border-purple-500/30 text-white focus:outline-none focus:border-lavenderGlow focus:ring-1 focus:ring-lavenderGlow transition-all text-sm" placeholder="Hi Dean, I'd like to discuss a project..."></textarea>
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="w-full py-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-purple-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold shadow-neon transition-all text-sm flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Send Message &amp; Contact Info
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 border-t border-purple-900/40 text-center text-xs text-gray-400 glass-panel">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-1 font-bold text-lavenderGlow">
+                Dean&lt;3 <span class="text-gray-400 font-normal">&copy; 2026. All rights reserved.</span>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="#home" class="hover:text-lavenderGlow transition-colors">Privacy Policy</a>
+                <a href="#contact" class="hover:text-lavenderGlow transition-colors">Terms</a>
+                <a href="#home" class="hover:text-lavenderGlow transition-colors">Back to Top <i class="fa-solid fa-arrow-up ml-1"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Details Modal -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden items-center justify-center px-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-panel max-w-lg w-full p-8 rounded-3xl border border-purple-500/40 shadow-neon-strong relative space-y-6">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <span id="modal-tag" class="text-xs font-mono bg-purple-900/80 text-lavenderGlow px-3 py-1 rounded-full border border-purple-500/30">Category</span>
+            <h3 id="modal-title" class="text-2xl font-bold text-white">Project Title</h3>
+            <p id="modal-desc" class="text-gray-300 text-sm leading-relaxed">Description...</p>
+            <button onclick="closeModal()" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold text-sm shadow-neon">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden glass-panel px-6 py-4 rounded-2xl border border-purple-500/40 shadow-neon-strong flex items-center gap-3 text-sm text-white">
+        <i class="fa-solid fa-circle-check text-lavenderGlow text-lg"></i>
+        <span id="toast-msg">Notification message</span>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        /* Multi-Colored Sparkle Canvas System */
+        const canvas = document.getElementById('sparkle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor(x, y, isBurst = false) {
+                this.x = x;
+                this.y = y;
+                this.isBurst = isBurst;
+                this.size = isBurst ? Math.random() * 9 + 4 : Math.random() * 5 + 2;
+                this.speedX = (Math.random() - 0.5) * (isBurst ? 7 : 2.5);
+                this.speedY = (Math.random() - 0.5) * (isBurst ? 7 : 2.5) - (isBurst ? 1.5 : 0.5);
+                this.opacity = 1;
+                this.fadeRate = Math.random() * 0.025 + 0.015;
+                
+                // Palette: Lavender, Violet, Electric Purple, Soft Magenta, Gold
+                const colors = ['#c084fc', '#e879f9', '#a855f7', '#f472b6', '#fbbf24', '#ffffff'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.shape = Math.random() > 0.35 ? 'star' : 'circle';
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.opacity -= this.fadeRate;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, this.opacity);
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 14;
+                ctx.shadowColor = this.color;
+
+                if (this.shape === 'star') {
+                    // 4-Point Sparkle Star
+                    ctx.beginPath();
+                    for (let i = 0; i < 4; i++) {
+                        ctx.lineTo(Math.cos((180 + i * 90) * Math.PI / 180) * this.size + this.x,
+                                   Math.sin((180 + i * 90) * Math.PI / 180) * this.size + this.y);
+                        ctx.lineTo(Math.cos((225 + i * 90) * Math.PI / 180) * (this.size / 3) + this.x,
+                                   Math.sin((225 + i * 90) * Math.PI / 180) * (this.size / 3) + this.y);
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Mouse Move Sparkles
+        window.addEventListener('mousemove', (e) => {
+            for (let i = 0; i < 3; i++) {
+                particles.push(new Particle(e.clientX, e.clientY));
+            }
+        });
+
+        // Click Burst Sparkles
+        window.addEventListener('click', (e) => {
+            for (let i = 0; i < 28; i++) {
+                particles.push(new Particle(e.clientX, e.clientY, true));
+            }
+        });
+
+        // Animation Loop
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].opacity <= 0) {
+                    particles.splice(i, 1);
+                    i--;
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Mobile Nav Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+        document.querySelectorAll('#mobile-menu a').forEach(l => l.addEventListener('click', () => mobileMenu.classList.add('hidden')));
+
+        // Project Filter
+        function filterProjects(category) {
+            const cards = document.querySelectorAll('.project-card');
+            const buttons = document.querySelectorAll('.tab-btn');
+
+            buttons.forEach(btn => {
+                if (btn.dataset.category === category) {
+                    btn.classList.add('bg-purple-900/60', 'text-white', 'shadow-neon', 'border-purple-400');
+                    btn.classList.remove('text-purple-300');
+                } else {
+                    btn.classList.remove('bg-purple-900/60', 'text-white', 'shadow-neon', 'border-purple-400');
+                    btn.classList.add('text-purple-300');
+                }
+            });
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Tic-Tac-Toe Game Engine
+        let board = ['', '', '', '', '', '', '', '', ''];
+        let currentPlayer = 'X';
+        let gameActive = true;
+        let gameMode = 'pvp';
+        let scoreX = 0, scoreO = 0, scoreDraw = 0;
+
+        const winningCombos = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
+        ];
+
+        function setGameMode(mode) {
+            gameMode = mode;
+            const btnPvp = document.getElementById('btn-pvp');
+            const btnAi = document.getElementById('btn-ai');
+            if (mode === 'pvp') {
+                btnPvp.className = "px-4 py-1.5 rounded-full text-xs font-mono bg-purple-900/80 border border-purple-400 text-white shadow-neon";
+                btnAi.className = "px-4 py-1.5 rounded-full text-xs font-mono glass-panel border border-purple-500/30 text-purple-300 hover:text-white";
+            } else {
+                btnAi.className = "px-4 py-1.5 rounded-full text-xs font-mono bg-purple-900/80 border border-purple-400 text-white shadow-neon";
+                btnPvp.className = "px-4 py-1.5 rounded-full text-xs font-mono glass-panel border border-purple-500/30 text-purple-300 hover:text-white";
+            }
+            resetGame();
+        }
+
+        function makeMove(index) {
+            if (board[index] !== '' || !gameActive) return;
+
+            board[index] = currentPlayer;
+            renderCell(index, currentPlayer);
+
+            if (checkWin(currentPlayer)) {
+                endGame(`Player ${currentPlayer} Wins! 🎉`);
+                if (currentPlayer === 'X') scoreX++; else scoreO++;
+                updateScores();
+                return;
+            }
+
+            if (!board.includes('')) {
+                endGame(`It's a Draw! 🤝`);
+                scoreDraw++;
+                updateScores();
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('game-status').textContent = `Player ${currentPlayer}'s turn`;
+
+            if (gameMode === 'ai' && currentPlayer === 'O' && gameActive) {
+                setTimeout(aiMove, 350);
+            }
+        }
+
+        function aiMove() {
+            let available = board.map((val, idx) => val === '' ? idx : null).filter(val => val !== null);
+            if (available.length === 0 || !gameActive) return;
+            let choice = available[Math.floor(Math.random() * available.length)];
+            makeMove(choice);
+        }
+
+        function renderCell(index, player) {
+            const cell = document.querySelector(`[data-index="${index}"]`);
+            cell.textContent = player;
+            cell.classList.add(player === 'X' ? 'text-lavenderGlow' : 'text-pink-400');
+        }
+
+        function checkWin(player) {
+            return winningCombos.some(combo => combo.every(index => board[index] === player));
+        }
+
+        function endGame(statusText) {
+            gameActive = false;
+            document.getElementById('game-status').textContent = statusText;
+            showToast(statusText);
+        }
+
+        function updateScores() {
+            document.getElementById('score-x').textContent = scoreX;
+            document.getElementById('score-o').textContent = scoreO;
+            document.getElementById('score-draw').textContent = scoreDraw;
+        }
+
+        function resetGame() {
+            board = ['', '', '', '', '', '', '', '', ''];
+            gameActive = true;
+            currentPlayer = 'X';
+            document.getElementById('game-status').textContent = `Player X's turn`;
+            document.querySelectorAll('.cell').forEach(cell => {
+                cell.textContent = '';
+                cell.classList.remove('text-lavenderGlow', 'text-pink-400');
+            });
+        }
+
+        function resetScores() {
+            scoreX = 0; scoreO = 0; scoreDraw = 0;
+            updateScores();
+            resetGame();
+            showToast('Scores reset!');
+        }
+
+        // Modals & Notifications
+        function openModal(title, desc, tag) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-desc').textContent = desc;
+            document.getElementById('modal-tag').textContent = tag;
+            const modal = document.getElementById('project-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('project-modal');
+            modal.classList.remove('flex');
+            modal.classList.add('hidden');
+        }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('sender-name').value;
+            const phone = document.getElementById('sender-phone').value;
+            showToast(`Thank you ${name}! Your message & contact info (${phone}) have been sent.`);
+            document.getElementById('contact-form').reset();
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3800);
+        }
+    </script>
+</body>
+</html>
